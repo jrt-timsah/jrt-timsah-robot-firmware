@@ -1,0 +1,152 @@
+@startuml ロボットシステム詳細配線図
+
+skinparam componentStyle rectangle
+
+' 電源系統
+node "バッテリー" as Battery {
+  portin "+ 12V" as BattPlus
+  portin "- GND" as BattGND
+}
+
+' 非常停止スイッチ
+node "非常停止スイッチ" as EmergencyStop {
+  portin "入力+" as ESIn
+  portin "入力-" as ESInGND
+  portout "出力P1+" as ESP1
+  portout "出力P2+" as ESP2
+  portout "出力P3+" as ESP3
+  portout "出力GND" as ESGND
+}
+
+' DC-DCコンバータ
+node "DC-DCコンバータ1\n(5V/5A)" as DCDC1 {
+  portin "IN+ 12V" as DC1In
+  portin "IN- GND" as DC1InGND
+  portout "OUT+ 5V" as DC1Out
+  portout "OUT- GND" as DC1OutGND
+}
+
+node "DC-DCコンバータ2\n(5V/3A)" as DCDC2 {
+  portin "IN+ 12V" as DC2In
+  portin "IN- GND" as DC2InGND
+  portout "OUT+ 5V" as DC2Out
+  portout "OUT- GND" as DC2OutGND
+}
+
+' Arduino制御ボード
+node "Arduino" as Arduino {
+  portin "VIN 5V" as ArduinoVIN
+  portin "GND" as ArduinoGND
+  portout "PWM1" as PWM1
+  portout "PWM2" as PWM2
+  portout "PWM3" as PWM3
+  portout "PWM4" as PWM4
+  portout "PWM5" as PWM5
+  portout "PWM6" as PWM6
+}
+
+' モータードライバ MD1
+node "モータードライバ MD1" as MD1 {
+  portin "VCC 5V" as MD1VCC
+  portin "GND" as MD1GND
+  portin "PWM1" as MD1PWM1
+  portin "PWM2" as MD1PWM2
+  portout "OUT1+" as MD1OUT1P
+  portout "OUT1-" as MD1OUT1N
+  portout "OUT2+" as MD1OUT2P
+  portout "OUT2-" as MD1OUT2N
+}
+
+' モータードライバ MD2
+node "モータードライバ MD2" as MD2 {
+  portin "VCC 5V" as MD2VCC
+  portin "GND" as MD2GND
+  portin "PWM1" as MD2PWM1
+  portin "PWM2" as MD2PWM2
+  portout "OUT1+" as MD2OUT1P
+  portout "OUT1-" as MD2OUT1N
+}
+
+' モータードライバ MD3
+node "モータードライバ MD3" as MD3 {
+  portin "VCC 5V" as MD3VCC
+  portin "GND" as MD3GND
+  portin "PWM1" as MD3PWM1
+  portin "PWM2" as MD3PWM2
+  portout "OUT1+" as MD3OUT1P
+  portout "OUT1-" as MD3OUT1N
+  portout "OUT2+" as MD3OUT2P
+  portout "OUT2-" as MD3OUT2N
+}
+
+' モーター
+component "発射角度制御\nサーボ" as Motor1 #LightBlue
+component "弾押し出し\nサーボ" as Motor2 #LightBlue
+component "発射モーター" as Motor3 #LightBlue
+component "左車輪モーター" as Motor4 #LightBlue
+component "右車輪モーター" as Motor5 #LightBlue
+
+' 電源配線 (赤線)
+BattPlus -[#red]-> ESIn : "12V"
+BattGND -[#black]-> ESInGND : "GND"
+
+ESP1 -[#red]-> DC1In : "P1: 12V"
+ESP2 -[#red]-> DC2In : "P2: 12V"
+ESGND -[#black]-> DC1InGND : "GND"
+ESGND -[#black]-> DC2InGND : "GND"
+
+' DC-DCコンバータ1 → モータードライバ (5V/5A)
+DC1Out -[#orange]-> MD1VCC : "5V"
+DC1Out -[#orange]-> MD2VCC : "5V"
+DC1Out -[#orange]-> MD3VCC : "5V"
+DC1OutGND -[#black]-> MD1GND : "GND"
+DC1OutGND -[#black]-> MD2GND : "GND"
+DC1OutGND -[#black]-> MD3GND : "GND"
+
+' DC-DCコンバータ2 → Arduino (5V/3A)
+DC2Out -[#orange]-> ArduinoVIN : "5V"
+DC2OutGND -[#black]-> ArduinoGND : "GND"
+
+' Arduino → モータードライバ制御信号
+PWM1 -[#blue]-> MD1PWM1 : "制御信号1"
+PWM2 -[#blue]-> MD1PWM2 : "制御信号2"
+PWM3 -[#blue]-> MD2PWM1 : "制御信号3"
+PWM4 -[#blue]-> MD2PWM2 : "制御信号4"
+PWM5 -[#blue]-> MD3PWM1 : "制御信号5"
+PWM6 -[#blue]-> MD3PWM2 : "制御信号6"
+
+' モータードライバ → モーター
+MD1OUT1P -[#green]-> Motor1 : "発射角度制御+"
+MD1OUT1N -[#green]-> Motor1 : "発射角度制御-"
+MD1OUT2P -[#green]-> Motor2 : "弾押し出し+"
+MD1OUT2N -[#green]-> Motor2 : "弾押し出し-"
+
+MD2OUT1P -[#green]-> Motor3 : "発射モーター+"
+MD2OUT1N -[#green]-> Motor3 : "発射モーター-"
+
+MD3OUT1P -[#green]-> Motor4 : "左車輪+"
+MD3OUT1N -[#green]-> Motor4 : "左車輪-"
+MD3OUT2P -[#green]-> Motor5 : "右車輪+"
+MD3OUT2N -[#green]-> Motor5 : "右車輪-"
+
+' 凡例
+legend right
+  |= 配線種類 |= 色 |
+  | 電源12V | <color:red>赤</color> |
+  | 電源5V | <color:orange>橙</color> |
+  | GND | <color:black>黒</color> |
+  | 制御信号 | <color:blue>青</color> |
+  | モーター出力 | <color:green>緑</color> |
+  
+  **配線ラベル:**
+  P1: 非常停止 → DC-DC1 (12V)
+  P2: 非常停止 → DC-DC2 (12V)
+  P3: 非常停止 → モータードライバ (予備)
+end legend
+
+note top of EmergencyStop
+  非常停止時は全ての
+  電源供給を遮断
+end note
+
+@enduml
