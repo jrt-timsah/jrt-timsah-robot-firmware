@@ -83,7 +83,7 @@ bool ControllerTimeout = true;  //タイムアウト検知戻り値
 #define AF_Signal1 digitalRead(AF1)     //オートレフェリからの停止信号
 
 /********  射出  ********/
-bool Shotmove = 1;            //射出動作中信号
+bool Shotmove = 0;            //射出動作中信号
 uint8_t ShotSeq = 0;          //射出動作シーケンスカウント用
 uint8_t RollerSeq = 0;        //チャタリング＆連打対策用
 uint8_t RollerOnOff = 0;      //ローラーON/OFFの切り替え記憶用
