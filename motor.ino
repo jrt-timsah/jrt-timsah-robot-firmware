@@ -40,7 +40,7 @@ void InitMotor(void){
 
   servo1.attach(SERVO1, 1000, 2000);    //ピッチ用
   servo2.attach(SERVO2, 1000, 2000);    //射出用
-  servo3.attach(SERVO3, 1000, 2000);    //調整用
+  servo3.attach(SERVO3, 1000, 2000);    //射出ローラーBrushless
 }
 
 /********  DC Motor  ********/
