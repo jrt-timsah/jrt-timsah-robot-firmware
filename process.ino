@@ -127,12 +127,13 @@ void Roller(void){
     delay(50);
   }else if(RollerSeq == 2){         //ローラー回転/停止処理
     if(RollerOnOff == 0){           //ローラー停止中の時
-      MotorON(ROLLER, 50);          //ローラー速度に50[%]を設定(PWM制御)
+      ServoON(ROLLER, 100);          //ローラー速度に50[%]を設定(PWM制御)
       RollerOnOff = 1;              //ローラー回転中に設定
     }else{                          //ローラー回転中の時
-      MotorOFF(ROLLER);             //ローラー停止を指令(PWM制御)
+      ServoON(ROLLER, 0);             //ローラー停止を指令(PWM制御)
       RollerOnOff = 0;              //ローラー停止中に設定
     }
     RollerSeq = 0;                  //ローラー回転シーケンスをリセット
   }
 }
+
