@@ -60,7 +60,7 @@ void setup() {
 
   // サーボ初期位置
   ServoON(SHOT, waitangle);  // 射出サーボ待機
-  // ServoON(SERVO3, 90);
+  ServoON(SERVO3, 0);        // 射出ローラーBrushless待機
 
   delay(1000);
 
