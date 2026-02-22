@@ -1,4 +1,4 @@
-# TKG Super Ultimate Hyper Programs (CoRE-2 Robot Firmware)
+# JRT Timsah Robot Firmware (CoRE-2 Robot Firmware)
 
 このファームウェアは、CoRE\-2ベースのロボット用に開発されました。ArduinoシールドVer\.2024およびコントローラ基板Ver\.2を使用し、ディスク射出機構を含む基本的なロボット操作を制御します。
 
