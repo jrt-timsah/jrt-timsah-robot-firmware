@@ -36,9 +36,19 @@ void JapaneseSerialMessageTest(){
 // 足回りの制御
 void Wheel(void){
   
+  float outputRight = 0.0;
+  float outputLeft = 0.0;
+  outputRight += AS_LeftY;
+  outputLeft += AS_LeftY;
+  outputRight += AS_RightX*-1.0;
+  outputLeft += AS_RightX;
+  outputRight = min(100, outputRight);
+  outputLeft = min(100, outputLeft);
+  
+
   // --- ★右タイヤの制御 ---
-  if(abs(AS_RightX) > 20){ // デッドゾーン（遊び）は20
-    float input = abs(AS_RightX);
+  if(abs(outputRight) > 20){ // デッドゾーン（遊び）は20
+    float input = abs(outputRight);
 
     // 2. Desmosの式の「カーブ部分」だけを使う
     // 【修正】マイナスの値を累乗して計算エラー(NaN)になるのを防ぐため、-127を削除しました。
@@ -49,7 +59,7 @@ void Wheel(void){
     Serial.println("Output(WHEEL_R): " + String((int)output));
 
     // 3. 元の符号（プラス・マイナス）に戻して出力
-    if(AS_RightX > 0){
+    if(outputRight > 0){
       // Serial.println("WHEEL_R MotorON (Plus): " + String((int)output));
        MotorON(WHEEL_R, (int)output);
     } else {
@@ -63,8 +73,8 @@ void Wheel(void){
   }
 
   // --- ★左タイヤの制御 ---
-  if(abs(AS_LeftY) > 20){
-    float input = abs(AS_LeftY);
+  if(abs(outputLeft) > 20){
+    float input = abs(outputLeft);
     
     // 【修正】同様に -127 を削除
     // 元の式: float output = pow(input-127, 1.8) / 48.0;
@@ -72,7 +82,7 @@ void Wheel(void){
 
     Serial.println("Output(WHEEL_L): " + String((int)output));
 
-    if(AS_LeftY > 0){
+    if(outputLeft > 0){
       // Serial.println("WHEEL_L MotorON (Plus): " + String((int)output));
        MotorON(WHEEL_L, (int)output);
     } else {
