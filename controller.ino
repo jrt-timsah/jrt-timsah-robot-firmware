@@ -7,8 +7,8 @@
 
 【変数】
 RxData[0]~RxData[3]:コントローラから受信したデータが入った配列
-  AS_Left ：左スティックのアナログ量(-100～100)(配列：RxData[0])
-  AS_Right：右スティックのアナログ量(-100～100)(配列：RxData[1])
+  AS_LeftX ：左スティックのアナログ量X(-100～100)(配列：RxData[0])
+  AS_RightX：右スティックのアナログ量X(-100～100)(配列：RxData[1])
   AS_Vol  ：ボリュームのアナログ量(0～255)(配列：RxData[2])
 */
 
@@ -32,17 +32,22 @@ bool RxController(void){
     }
     
     //元々-100～100だったのが0～255に変更になったのでここで変換
-    RxData[0] -= 127; 
-    RxData[0] = RxData[0]*100/127;
-    RxData[1] -= 127;
-    RxData[1] = RxData[1]*100/127;
+    AS_LeftX -= 127; 
+    AS_LeftX = -1*RxData[0]*100/127;//コントローラーの配線の都合上-1をかけて左右反転させています
+    AS_LeftY -= 127;
+    AS_LeftY = RxData[1]*100/127;
+    AS_RightX -= 127;
+    AS_RightX = -1*RxData[2]*100/127;//コントローラーの配線の都合上-1をかけて左右反転させています
 
-    Serial.print("AS_Left =  ");
-    Serial.print(AS_Left);
-    Serial.print(", AS_Right = ");
-    Serial.print(AS_Right);
+
+    Serial.print("AS_LeftX =  ");
+    Serial.print(AS_LeftX);
+    Serial.print(", AS_LeftY = ");
+    Serial.print(AS_LeftY);
+    Serial.print(", AS_RightX = ");
+    Serial.print(AS_RightX);
     Serial.print(", AS_Vol = ");
-    Serial.print(RxData[3]);
+    Serial.print(AS_Vol);
     Serial.print(", SW_ENABLE = ");
     Serial.print(SW_ENABLE);
     Serial.print(", SW_SHOT = ");
@@ -51,6 +56,8 @@ bool RxController(void){
     Serial.print(SW_ROLLER);
     Serial.print(", OperationReady = ");
     Serial.println(OperationReady);
+
+
     //Serial.print(", RxData[0]= ");
     //Serial.print(RxData[0]);
     //Serial.print(", RxData[1]= ");

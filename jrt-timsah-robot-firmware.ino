@@ -28,10 +28,10 @@ Arduinoシールド ：Ver.2024
 #define SW4       ((RxData[4] & 0b001000) >> 3) //SW4 予備
 #define SDA       ((RxData[4] & 0b010000) >> 4) //予備
 #define SCL       ((RxData[4] & 0b100000) >> 5) //予備
-#define AS_Left   (RxData[0])                   //A1 左スティック
-#define AS_Right  (RxData[1])                   //A2 右スティック
-#define AS_Vol    (RxData[3])                   //A3 ピッチ調整
-#define A4        (RxData[3])                   //A4 予備
+#define AS_LeftX  (RxData[0])                   //A1 左スティックのX
+#define AS_LeftY  (RxData[1])                   //A2 左スティックのY
+#define AS_RightX (RxData[2])                   //A3 右スティックのX
+#define AS_Vol    (RxData[3])                   //A4 角度調整
 
 //====================
 // モータ・サーボ割付

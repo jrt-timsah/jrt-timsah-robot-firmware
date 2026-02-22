@@ -37,8 +37,8 @@ void JapaneseSerialMessageTest(){
 void Wheel(void){
   
   // --- ★右タイヤの制御 ---
-  if(abs(AS_Right) > 20){ // デッドゾーン（遊び）は20
-    float input = abs(AS_Right);
+  if(abs(AS_RightX) > 20){ // デッドゾーン（遊び）は20
+    float input = abs(AS_RightX);
 
     // 2. Desmosの式の「カーブ部分」だけを使う
     // 【修正】マイナスの値を累乗して計算エラー(NaN)になるのを防ぐため、-127を削除しました。
@@ -49,7 +49,7 @@ void Wheel(void){
     Serial.println("Output(WHEEL_R): " + String((int)output));
 
     // 3. 元の符号（プラス・マイナス）に戻して出力
-    if(AS_Right > 0){
+    if(AS_RightX > 0){
       // Serial.println("WHEEL_R MotorON (Plus): " + String((int)output));
        MotorON(WHEEL_R, (int)output);
     } else {
@@ -63,8 +63,8 @@ void Wheel(void){
   }
 
   // --- ★左タイヤの制御 ---
-  if(abs(AS_Left) > 20){
-    float input = abs(AS_Left);
+  if(abs(AS_LeftY) > 20){
+    float input = abs(AS_LeftY);
     
     // 【修正】同様に -127 を削除
     // 元の式: float output = pow(input-127, 1.8) / 48.0;
@@ -72,7 +72,7 @@ void Wheel(void){
 
     Serial.println("Output(WHEEL_L): " + String((int)output));
 
-    if(AS_Left > 0){
+    if(AS_LeftY > 0){
       // Serial.println("WHEEL_L MotorON (Plus): " + String((int)output));
        MotorON(WHEEL_L, (int)output);
     } else {
