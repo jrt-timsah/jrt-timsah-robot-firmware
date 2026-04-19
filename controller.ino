@@ -7,9 +7,10 @@
 
 【変数】
 RxData[0]~RxData[3]:コントローラから受信したデータが入った配列
-  AS_LeftX ：左スティックのアナログ量X(-100～100)(配列：RxData[0])
-  AS_RightX：右スティックのアナログ量X(-100～100)(配列：RxData[1])
-  AS_Vol  ：ボリュームのアナログ量(0～255)(配列：RxData[2])
+  AS_LeftX ：左スティック左右のアナログ量(-100～100)(配列：RxData[0])
+  AS_LeftY ：左スティック上下のアナログ量(-100～100)(配列：RxData[1])
+  AS_RightX：右スティックのアナログ量(-100～100)(配列：RxData[2])
+  AS_Vol  ：ボリュームのアナログ量(0～255)(配列：RxData[3])
 */
 
 bool RxController(void){

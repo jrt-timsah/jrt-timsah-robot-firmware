@@ -36,8 +36,10 @@ Arduinoシールド ：Ver.2024
 //====================
 // モータ・サーボ割付
 //====================
-#define WHEEL_L MOTOR1
-#define WHEEL_R MOTOR2
+#define WHEEL_A MOTOR1
+#define WHEEL_B MOTOR2
+#define WHEEL_C MOTOR3
+#define WHEEL_D MOTOR4
 #define ROLLER  SERVO3
 #define PITCH   SERVO1
 #define SHOT    SERVO2
@@ -61,7 +63,7 @@ void setup() {
 
   // サーボ初期位置
   ServoON(SHOT, waitangle);  // 射出サーボ待機
-  ServoON(SERVO3, 0);        // 射出ローラーBrushless待機
+  ServoON(ROLLER, 0);        // 射出ローラーBrushless待機
 
   delay(1000);
 

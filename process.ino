@@ -5,19 +5,18 @@
 
 【変数】
 RxData[0]~RxData[3]:コントローラから受信したデータが入った配列
-  AS_Left ：左スティックのアナログ量(-100～100)(配列：RxData[0])
-  AS_Right：右スティックのアナログ量(-100～100)(配列：RxData[1])
-  AS_Vol  ：ボリュームのアナログ量(0～255)(配列：RxData[2])
+  AS_LeftX ：左スティック左右のアナログ量(-100～100)(配列：RxData[0])
+  AS_LeftY ：左スティック上下のアナログ量(-100～100)(配列：RxData[1])
+  AS_RightX：右スティックのアナログ量(-100～100)(配列：RxData[2])
+  AS_Vol  ：ボリュームのアナログ量(0～255)(配列：RxData[3])
 ShotSeq：射出のシーケンス管理用変数
 RollerSeq：ローラー回転シーケンスの管理用変数
 RollerOnOff：ローラー回転状態の管理用変数
 
 【関数】
 MotorON(motor, pwm)：モータを回すための関数　motor：回すモータ　pwm：-100~100
-  WHEEL_L：左タイヤ
-  WHEEL_R：右タイヤ
   ROLLER ：射出ローラー
-  例)　MotorON(WHEEL_L, -50);
+  例)　MotorON(WHEEL_A, -50);
 MotorOFF(motor)：モータを停止するための関数　motor：停止するモータ
 
 ServoON(servo, angle)：サーボを動かすための関数　servo：動かすサーボ　angle：90~180
@@ -30,6 +29,7 @@ ServoON(servo, angle)：サーボを動かすための関数　servo：動かす
 // 足回りの制御
 float Gain[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 float Offset[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+float RejectLine = 20.0f;
 float VmSignSet[3][4] = {
   {-1.0f,-1.0f,1.0f,1.0f},
   {1.0f,-1.0f,-1.0f,1.0f},
@@ -38,6 +38,7 @@ float VmSignSet[3][4] = {
 // モーター4つ分の出力を計算して格納する
 float motorPower[4];
 void updateMotorPower(float ly, float lx, float rx) {
+  if (abs(ly) <= RejectLine) ly = 0.0f; if (abs(lx) <= RejectLine) lx = 0.0f; if (abs(rx) <= RejectLine) rx = 0.0f;
   bool isNegative [4];
   for(int i=0; i<4; i++) {
     motorPower[i] = (VmSignSet[0][i] * ly) + (VmSignSet[1][i] * lx) + (VmSignSet[2][i] * rx);
@@ -52,10 +53,10 @@ void updateMotorPower(float ly, float lx, float rx) {
 }
 void Wheel(void){
   updateMotorPower(AS_LeftY, AS_LeftX, AS_RightX);
-  MotorON(MOTOR1, motorPower[0]); // OMNI - A
-  MotorON(MOTOR2, motorPower[1]); // OMNI - B
-  MotorON(MOTOR3, motorPower[2]); // OMNI - C
-  MotorON(MOTOR4, motorPower[3]); // OMNI - D
+  MotorON(WHEEL_A, motorPower[0]); // OMNI - A
+  MotorON(WHEEL_B, motorPower[1]); // OMNI - B
+  MotorON(WHEEL_C, motorPower[2]); // OMNI - C
+  MotorON(WHEEL_D, motorPower[3]); // OMNI - D
 }
 
 //射出角度の制御
@@ -65,7 +66,7 @@ void Pitch(void){
   d *= 0.6;
   // d -= 644.705;
   pitchangle = (int)d; //★AS_Vol の値(-100～100) を 0～90に変換
-  ServoON(SERVO1, pitchangle);  //サーボモータに角度を指令
+  ServoON(PITCH, pitchangle);  //サーボモータに角度を指令
  //Serial.print("AS_Vol:");
  //Serial.print(AS_Vol);
  //Serial.print("  実際の角度:");
