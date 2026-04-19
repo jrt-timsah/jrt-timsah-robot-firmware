@@ -29,11 +29,11 @@ void InitMotor(void){
   Dir[MOTOR8][0] = DIR8;
 
   //ここで正転逆転を変える
-  Dir[MOTOR1][1] = -1;  //左タイヤ
-  Dir[MOTOR2][1] = 1;   //右タイヤ
-  Dir[MOTOR3][1] = 1;   //射出ローラー
-  Dir[MOTOR4][1] = 1;
-  Dir[MOTOR5][1] = 1;
+  Dir[MOTOR1][1] = 1;   // Omni - A
+  Dir[MOTOR2][1] = 1;   // Omni - B
+  Dir[MOTOR3][1] = 1;   // Omni - C
+  Dir[MOTOR4][1] = 1;   // Omni - D
+  Dir[MOTOR5][1] = 1;   // 射出ローラー予約用
   Dir[MOTOR6][1] = 1;
   Dir[MOTOR7][1] = 1;
   Dir[MOTOR8][1] = 1;

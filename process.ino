@@ -26,73 +26,36 @@ ServoON(servo, angle)：サーボを動かすための関数　servo：動かす
   例)　ServoON(PITCH, 100);
   
 */
-// シリアルモニタ検証用コード
-// 上手くいったら色んなコードに仕込む予定
-// 基盤をつなげられたら試そう！！！！
-void JapaneseSerialMessageTest(){
-  Serial.println("Shot");
+
+// 足回りの制御
+float Gain[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+float Offset[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+float VmSignSet[3][4] = {
+  {-1.0f,-1.0f,1.0f,1.0f},
+  {1.0f,-1.0f,-1.0f,1.0f},
+  {1.0f,1.0f,1.0f,1.0f}
+};
+// モーター4つ分の出力を計算して格納する
+float motorPower[4];
+void updateMotorPower(float ly, float lx, float rx) {
+  bool isNegative [4];
+  for(int i=0; i<4; i++) {
+    motorPower[i] = (VmSignSet[0][i] * ly) + (VmSignSet[1][i] * lx) + (VmSignSet[2][i] * rx);
+    motorPower[i] = motorPower[i] * Gain[i] + Offset[i];
+    motorPower[i] = min(100, motorPower[i]);
+    isNegative[i] = (motorPower[i] < 0);
+    motorPower[i] = pow(abs(motorPower[i]), 1.8) / 48.0;
+    if (isNegative[i] == true){
+      motorPower[i] = -motorPower[i];
+    }
+  }
 }
-// 足回りの制御
-// 足回りの制御
 void Wheel(void){
-  
-  float outputRight = 0.0;
-  float outputLeft = 0.0;
-  outputRight += AS_LeftY;
-  outputLeft += AS_LeftY;
-  outputRight += AS_RightX*-1.0;
-  outputLeft += AS_RightX;
-  outputRight = min(100, outputRight);
-  outputLeft = min(100, outputLeft);
-  
-
-  // --- ★右タイヤの制御 ---
-  if(abs(outputRight) > 20){ // デッドゾーン（遊び）は20
-    float input = abs(outputRight);
-
-    // 2. Desmosの式の「カーブ部分」だけを使う
-    // 【修正】マイナスの値を累乗して計算エラー(NaN)になるのを防ぐため、-127を削除しました。
-    // 元の式: float output = pow(input-127, 1.8) / 48.0;
-    float output = pow(input, 1.8) / 48.0;
-    
-    // 文字列と数値を結合するため String() で囲んでいます
-    Serial.println("Output(WHEEL_R): " + String((int)output));
-
-    // 3. 元の符号（プラス・マイナス）に戻して出力
-    if(outputRight > 0){
-      // Serial.println("WHEEL_R MotorON (Plus): " + String((int)output));
-       MotorON(WHEEL_R, (int)output);
-    } else {
-       // マイナス方向なら、出力もマイナスにして渡す
-      // Serial.println("WHEEL_R MotorON (Minus): " + String((int)-output));
-       MotorON(WHEEL_R, (int)-output);
-    }
-  }
-  else{
-    MotorOFF(WHEEL_R);
-  }
-
-  // --- ★左タイヤの制御 ---
-  if(abs(outputLeft) > 20){
-    float input = abs(outputLeft);
-    
-    // 【修正】同様に -127 を削除
-    // 元の式: float output = pow(input-127, 1.8) / 48.0;
-    float output = pow(input, 1.8) / 48.0;
-
-    Serial.println("Output(WHEEL_L): " + String((int)output));
-
-    if(outputLeft > 0){
-      // Serial.println("WHEEL_L MotorON (Plus): " + String((int)output));
-       MotorON(WHEEL_L, (int)output);
-    } else {
-      // Serial.println("WHEEL_L MotorON (Minus): " + String((int)-output));
-       MotorON(WHEEL_L, (int)-output);
-    }
-  }
-  else{
-    MotorOFF(WHEEL_L);
-  }
+  updateMotorPower(AS_LeftY, AS_LeftX, AS_RightX);
+  MotorON(MOTOR1, motorPower[0]); // OMNI - A
+  MotorON(MOTOR2, motorPower[1]); // OMNI - B
+  MotorON(MOTOR3, motorPower[2]); // OMNI - C
+  MotorON(MOTOR4, motorPower[3]); // OMNI - D
 }
 
 //射出角度の制御
@@ -111,18 +74,6 @@ void Pitch(void){
 
 // 射出用Util
 void ShotRollerControl(void){
-  /*
-  if((RollerOnOff == 0) && (ShotSeq == 0)){
-    //射出ボタンが押され，ローラーが回っていないとき
-    //motor[ROLLER].TxVel = 15000;//ローラー速度に15000を設定 (CAN制御)
-    //MotorON(ROLLER, 50);          //ローラー速度に50[%]を設定(PWM制御) // [80 -> 50]に変更中
-    RollerTime = millis();        //ローラー回転開始時間記録
-    ShotSeq = 1;                  //射出シーケンスを1に
-  }else if((ShotSeq == 1) && ((millis() - RollerTime) > 1000)){
-    //射出シーケンスが1になり，1000msec経過後
-    RollerOnOff = 1;              //ローラー回転状態に設定
-    ShotSeq = 0;                  //射出シーケンスを0に
-  }else */
   if( RollerOnOff == 1 && ((millis() - RollerTime) > 1000) ){
     //射出ボタンが押され，ローラーが回っているとき
     if(((millis() - ShotTime) > 500) && (Shotmove == 0)){

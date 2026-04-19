@@ -114,7 +114,6 @@ void loop() {
   // 操作不可時
   //====================
   else {
-
     RollerOnOff = false;
     ShotSeq  = 0;
     Shotmove = 0;
@@ -133,4 +132,3 @@ void loop() {
     delayMicroseconds(10);
   }
 }
-
