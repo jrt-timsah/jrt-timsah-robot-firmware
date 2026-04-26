@@ -52,6 +52,8 @@ bool RxController(void){
     Serial.print(AS_Vol);
     Serial.print(", 入力角度 = ");
     Serial.print(pitchangle);
+    Serial.print(", CurrentRollerValue = ");
+    Serial.print(CurrentRollerValue);
     Serial.print(", SW_ENABLE = ");
     Serial.print(SW_ENABLE);
     Serial.print(", SW_SHOT = ");

@@ -88,9 +88,10 @@ bool RollerOnOff = 0;      //ローラーON/OFFの切り替え記憶用
 uint64_t RollerTime = 0;      //ローラースイッチのチャタリング対策
 unsigned long ShotTime = 0;   //射出動作シーケンスの静定時間設定用
 unsigned int ShotAngle;       //射出用サーボモータ角度
-unsigned int waitangle = 90;  //射出用サーボモータ待機位置
-unsigned int shotangle;       //射出用サーボモータ射出位置
+unsigned int waitangle = 30;  //射出用サーボモータ待機位置
+unsigned int shotangle = 160;       //射出用サーボモータ射出位置
 int pitchangle = 0;  //ピッチ用サーボモータ角度
+int CurrentRollerValue = 0;
 
 /********  RMモータ制御に関する構造体  ********
 typedef struct RMmotor {

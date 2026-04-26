@@ -113,11 +113,6 @@ void ShotIdle(void){
 
 //射出シーケンス
 void Shot(void){
-  waitangle = 30;   //待機(装填)位置 90～110程度で調整
-  shotangle = 160;  //射出位置 160～180程度で調整
-  //Serial.println("SW_SHOT");
-  //Serial.println(SW_SHOT);
-
   if (SW_SHOT && Shotmove == 0){
     ShotRollerControl();
   }
@@ -125,6 +120,8 @@ void Shot(void){
 }
 
 //ローラー回転のシーケンス
+// CurrentRollerValue += 10;
+// CurrentRollerValue = min(CurrentRollerValue, 100);
 void Roller(void){
   if(SW_ROLLER && ((millis() - RollerTime) > 500)){ //押した検出　チャタリング防止で500ms間は連打できない
     RollerSeq = 1;                  //ローラー回転シーケンスを1に
@@ -135,14 +132,20 @@ void Roller(void){
     delay(50);
   }else if(RollerSeq == 2){         //ローラー回転/停止処理
     if(RollerOnOff == 0){           //ローラー停止中の時
-      ServoON(ROLLER, 100);          //ローラー速度に50[%]を設定(PWM制御)
       RollerOnOff = 1;              //ローラー回転中に設定
     }else{                          //ローラー回転中の時
-      ServoON(ROLLER, 0);             //ローラー停止を指令(PWM制御)
       RollerOnOff = 0;              //ローラー停止中に設定
     }
     RollerSeq = 0;                  //ローラー回転シーケンスをリセット
   }
+  if (RollerOnOff == 0){
+    CurrentRollerValue = 0;
+  }
+  else {
+    CurrentRollerValue += 10;
+    CurrentRollerValue = min(CurrentRollerValue, 100);
+  }
+  ServoON(ROLLER, CurrentRollerValue); // ローラーループ
 }
 
 
