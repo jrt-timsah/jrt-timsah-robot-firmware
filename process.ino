@@ -56,19 +56,19 @@ void updateMotorPower(float ly, float lx, float rx) {
 }
 void Wheel(void){
   updateMotorPower(AS_LeftY, AS_LeftX, AS_RightX);
-  float Rate = 100.0f / mostStrongestPower;
+  float Rate = 75.0f / mostStrongestPower; // Rate = (Speed) / mostStrongestPower; Speed部分の数字を調節することで出力を制限可能。
   if (Rate > 1.0f) Rate = 1.0f;
-  Serial.print("Rate: ");
-  Serial.print(Rate);
+  // Serial.print("Rate: ");
+  // Serial.print(Rate);
   for (int i=0; i<4; i++){ motorPower[i] *= Rate; }
-  Serial.print(", A: ");
-  Serial.print(motorPower[0]);
-  Serial.print(", B: ");
-  Serial.print(motorPower[1]);
-  Serial.print(", C: ");
-  Serial.print(motorPower[2]);
-  Serial.print(", D: ");
-  Serial.println(motorPower[3]);
+  // Serial.print(", A: ");
+  // Serial.print(motorPower[0]);
+  // Serial.print(", B: ");
+  // Serial.print(motorPower[1]);
+  // Serial.print(", C: ");
+  // Serial.print(motorPower[2]);
+  // Serial.print(", D: ");
+  // Serial.println(motorPower[3]);
   MotorON(WHEEL_A, motorPower[0]); // OMNI - A
   MotorON(WHEEL_B, motorPower[1]); // OMNI - B
   MotorON(WHEEL_C, motorPower[2]); // OMNI - C
@@ -79,14 +79,9 @@ void Wheel(void){
 void Pitch(void){
   //コントローラからの信号をサーボモータの角度に変換する
   long d = AS_Vol;
-  d *= 0.6;
-  // d -= 644.705;
-  pitchangle = (int)d; //★AS_Vol の値(-100～100) を 0～90に変換
+  d /= 2.83; //★AS_Vol の値(0～255) を 0～90に変換
+  pitchangle = (int)d;
   ServoON(PITCH, pitchangle);  //サーボモータに角度を指令
- //Serial.print("AS_Vol:");
- //Serial.print(AS_Vol);
- //Serial.print("  実際の角度:");
- //Serial.println(pitchangle);
 }
 
 // 射出用Util

@@ -40,8 +40,9 @@ bool RxController(void){
     AS_RightX -= 127;
     AS_RightX = -1*RxData[2]*100/127;//コントローラーの配線の都合上-1をかけて左右反転させています
 
-
-    Serial.print("AS_LeftX =  ");
+    Serial.print("AF_Signal1 = ");
+    Serial.print(AF_Signal1);
+    Serial.print(", AS_LeftX =  ");
     Serial.print(AS_LeftX);
     Serial.print(", AS_LeftY = ");
     Serial.print(AS_LeftY);
@@ -49,6 +50,8 @@ bool RxController(void){
     Serial.print(AS_RightX);
     Serial.print(", AS_Vol = ");
     Serial.print(AS_Vol);
+    Serial.print(", 入力角度 = ");
+    Serial.print(pitchangle);
     Serial.print(", SW_ENABLE = ");
     Serial.print(SW_ENABLE);
     Serial.print(", SW_SHOT = ");

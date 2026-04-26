@@ -90,7 +90,7 @@ unsigned long ShotTime = 0;   //射出動作シーケンスの静定時間設定
 unsigned int ShotAngle;       //射出用サーボモータ角度
 unsigned int waitangle = 90;  //射出用サーボモータ待機位置
 unsigned int shotangle;       //射出用サーボモータ射出位置
- int pitchangle = 0;  //ピッチ用サーボモータ角度
+int pitchangle = 0;  //ピッチ用サーボモータ角度
 
 /********  RMモータ制御に関する構造体  ********
 typedef struct RMmotor {
