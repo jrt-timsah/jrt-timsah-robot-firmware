@@ -27,6 +27,7 @@ ServoON(servo, angle)：サーボを動かすための関数　servo：動かす
 */
 
 // 足回りの制御
+// 定数
 float Gain[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 float Offset[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 float RejectLine = 20.0f;
@@ -37,6 +38,7 @@ float VmSignSet[3][4] = {
 };
 // モーター4つ分の出力を計算して格納する
 float motorPower[4];
+float mostStrongestPower = 0.0f;
 void updateMotorPower(float ly, float lx, float rx) {
   if (abs(ly) <= RejectLine) ly = 0.0f; if (abs(lx) <= RejectLine) lx = 0.0f; if (abs(rx) <= RejectLine) rx = 0.0f;
   bool isNegative [4];
@@ -49,17 +51,16 @@ void updateMotorPower(float ly, float lx, float rx) {
     if (isNegative[i] == true){
       motorPower[i] = -motorPower[i];
     }
+    mostStrongestPower = max(mostStrongestPower, abs(motorPower[i]));
   }
 }
 void Wheel(void){
-  float VectorLength = sqrtf(AS_LeftX * AS_LeftX + AS_LeftY * AS_LeftY);
-  float Rate = 50.0f / VectorLength;
+  updateMotorPower(AS_LeftY, AS_LeftX, AS_RightX);
+  float Rate = 100.0f / mostStrongestPower;
   if (Rate > 1.0f) Rate = 1.0f;
-  Serial.print("VectorLength: ");
-  Serial.print(VectorLength);
-  Serial.print(", Rate: ");
+  Serial.print("Rate: ");
   Serial.print(Rate);
-  updateMotorPower(AS_LeftY * Rate, AS_LeftX * Rate, AS_RightX * 0.5f);
+  for (int i=0; i<4; i++){ motorPower[i] *= Rate; }
   Serial.print(", A: ");
   Serial.print(motorPower[0]);
   Serial.print(", B: ");
