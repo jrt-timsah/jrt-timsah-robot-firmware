@@ -59,20 +59,20 @@ bool RxController(void){
     Serial.println(OperationReady);
 
 
-    //Serial.print(", RxData[0]= ");
-    //Serial.print(RxData[0]);
-    //Serial.print(", RxData[1]= ");
-    //Serial.print(RxData[1]);
-    //Serial.print(", RxData[2]= ");
-    //Serial.print(RxData[2]);
-    //Serial.print(", RxData[3]= ");
-    //Serial.print(RxData[3]);
-    //Serial.print(", RxData[4]= ");
-    //Serial.print(RxData[4]);
-    //Serial.print(", RxData[5]= ");
-    //Serial.print(RxData[5]);
-    //Serial.print(", RxData[6]= ");
-    //Serial.println(RxData[6]);
+    // Serial.print(", RxData[0]= ");
+    // Serial.print(RxData[0]);
+    // Serial.print(", RxData[1]= ");
+    // Serial.print(RxData[1]);
+    // Serial.print(", RxData[2]= ");
+    // Serial.print(RxData[2]);
+    // Serial.print(", RxData[3]= ");
+    // Serial.print(RxData[3]);
+    // Serial.print(", RxData[4]= ");
+    // Serial.print(RxData[4]);
+    // Serial.print(", RxData[5]= ");
+    // Serial.print(RxData[5]);
+    // Serial.print(", RxData[6]= ");
+    // Serial.println(RxData[6]);
 
     return ControllerTimeout = false;
 

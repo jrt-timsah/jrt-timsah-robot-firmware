@@ -31,9 +31,9 @@ float Gain[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 float Offset[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 float RejectLine = 20.0f;
 float VmSignSet[3][4] = {
-  {-1.0f,-1.0f,1.0f,1.0f},
-  {1.0f,-1.0f,-1.0f,1.0f},
-  {1.0f,1.0f,1.0f,1.0f}
+  {1.0f,1.0f,-1.0f,-1.0f},
+  {-1.0f,1.0f,-1.0f,1.0f},
+  {-1.0f,-1.0f,-1.0f,-1.0f}
 };
 // モーター4つ分の出力を計算して格納する
 float motorPower[4];
@@ -52,7 +52,22 @@ void updateMotorPower(float ly, float lx, float rx) {
   }
 }
 void Wheel(void){
-  updateMotorPower(AS_LeftY, AS_LeftX, AS_RightX);
+  float VectorLength = sqrtf(AS_LeftX * AS_LeftX + AS_LeftY * AS_LeftY);
+  float Rate = 50.0f / VectorLength;
+  if (Rate > 1.0f) Rate = 1.0f;
+  Serial.print("VectorLength: ");
+  Serial.print(VectorLength);
+  Serial.print(", Rate: ");
+  Serial.print(Rate);
+  updateMotorPower(AS_LeftY * Rate, AS_LeftX * Rate, AS_RightX * 0.5f);
+  Serial.print(", A: ");
+  Serial.print(motorPower[0]);
+  Serial.print(", B: ");
+  Serial.print(motorPower[1]);
+  Serial.print(", C: ");
+  Serial.print(motorPower[2]);
+  Serial.print(", D: ");
+  Serial.println(motorPower[3]);
   MotorON(WHEEL_A, motorPower[0]); // OMNI - A
   MotorON(WHEEL_B, motorPower[1]); // OMNI - B
   MotorON(WHEEL_C, motorPower[2]); // OMNI - C
