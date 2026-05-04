@@ -41,6 +41,7 @@ float motorPower[4];
 float mostStrongestPower = 0.0f;
 void updateMotorPower(float ly, float lx, float rx) {
   if (abs(ly) <= RejectLine) ly = 0.0f; if (abs(lx) <= RejectLine) lx = 0.0f; if (abs(rx) <= RejectLine) rx = 0.0f;
+  mostStrongestPower = 0.0f;
   bool isNegative [4];
   for(int i=0; i<4; i++) {
     motorPower[i] = (VmSignSet[0][i] * ly) + (VmSignSet[1][i] * lx) + (VmSignSet[2][i] * rx);
@@ -56,7 +57,9 @@ void updateMotorPower(float ly, float lx, float rx) {
 }
 void Wheel(void){
   updateMotorPower(AS_LeftY, AS_LeftX, AS_RightX);
-  float Rate = 75.0f / mostStrongestPower; // Rate = (Speed) / mostStrongestPower; Speed部分の数字を調節することで出力を制限可能。
+  // ====== SPEED CONFIG ===== //
+  float Rate = 50.0f / mostStrongestPower; // Rate = (Speed) / mostStrongestPower; Speed部分の数字を調節することで出力を制限可能。
+
   if (Rate > 1.0f) Rate = 1.0f;
   // Serial.print("Rate: ");
   // Serial.print(Rate);
@@ -79,7 +82,9 @@ void Wheel(void){
 void Pitch(void){
   //コントローラからの信号をサーボモータの角度に変換する
   long d = AS_Vol;
-  d /= 2.83; //★AS_Vol の値(0～255) を 0～90に変換
+  // 0~90: 2.83
+  // 0~67: 3.8
+  d /= 3.8; //★AS_Vol の値(0～255) を 0～90に変換
   pitchangle = (int)d;
   ServoON(PITCH, pitchangle);  //サーボモータに角度を指令
 }
